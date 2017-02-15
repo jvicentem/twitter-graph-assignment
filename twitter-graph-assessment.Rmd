@@ -1,0 +1,24 @@
+---
+title: "Análisis de Grafos y Redes Sociales"
+author: "José Vicente Mellado"
+date: "15 February 2017"
+output: html_document
+---
+
+## Introducción
+
+El	 grafo	 out.ego-twitter almacena	 información	 acerca	 de	 usuarios	 de	 Twitter.	 En	 concreto,	 se	 trata	 de	 un	grafo	 dirigido	 no	 ponderado	 donde	 cada	 vértice	 representa	a	 un	usuario,	mientras	que	una	arista	(v, u) indica	que	el	usuario	v sigue	al	usuario	u. El	objetivo	 de	 esta	 hoja	 de	 ejercicios	 es	 analizar	 la	 estructura	 de	 este	 grafo	 y	 extraer	 diferentes	características	estructurales	del	mismo.
+
+```{r import-libraries, message=FALSE, warning=FALSE}
+library(igraph)
+library(magrittr)
+library(knitr)
+library(dplyr)
+```
+
+1. Carga el grafo en memoria. Las funciones read_table y graph.data.frame facilitan la tarea de cargar grafos en un formato aceptado por igraph. Busca en la documentación de igraph y R su descripción y uso.
+
+```{r 1}
+g <- read.table('./out.ego-twitter', sep=' ') %>%
+                graph_from_data_frame(directed=TRUE)
+```
