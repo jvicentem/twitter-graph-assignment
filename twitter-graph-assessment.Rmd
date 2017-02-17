@@ -29,10 +29,10 @@ g <- read.table('./out.ego-twitter', sep=' ') %>%
 ```{r 2}
 #plot(g, layout=layout.kamada.kawai)
 
-is.connected(g)
-is.directed(g)
-is.weighted(g)
-is.bipartite(g)
+cat('¿Es el grafo conexo?: ',is.connected(g), '\n')
+cat('¿Es el grafo dirigido?: ', is.directed(g), '\n')
+cat('¿Es el grafo ponderado?: ', is.weighted(g), '\n')
+cat('¿Es el grafo bipartido?: ', is.bipartite(g), '\n')
 ```
 
 La información que nos muestra la salida sobre el grafo es la siguiente: se trata de un grafo que no es conexo, sí es dirigido, no es un grafo ponderado ni tampoco bipartido.
@@ -57,5 +57,25 @@ hist(log(g.degree))
 
 El grado de un vértice representa el número de seguidores (followers) que tiene un usuario.
 
-Como se puede apreciar, hay muchos usuarios con 20 o menos seguidores en comparación con el resto. En el segundo gráfico se elimina ese primer grupo para poder ver mejor la frecuencia del número de seguidores. En el último gráfico se aplica una transformación logarítmica para observar mejor el aspecto de la frecuencia de los followers
+Como se puede apreciar, hay muchos usuarios con 20 o menos seguidores en comparación con el resto. En el segundo gráfico se elimina ese primer grupo para poder ver mejor la frecuencia del número de seguidores. En el último gráfico se aplica una transformación logarítmica para observar mejor el aspecto de la frecuencia de los followers.
 
+
+4. Si	seleccionamos	la	comunidad	 formada	por	los	usuarios	190,	191,	192,	193,	194	y	13167,	 ¿podemos	 considerar	 que	 los	 usuarios	 que	 la	 forman	 están	 fuertemente	conectados?	¿qué	tipo	de	conexión	tienen?
+
+```{r 4}
+community <- induced_subgraph(g, c('190', '191', '192', '193', '193', '194', '13167'))
+
+plot(community)
+
+cat('¿Es el grafo fuertemente conexo?: ', is_connected(community, mode='strong'), '\n')
+cat('¿Es el grafo débilmente conexo?: ', is_connected(community, mode='weak'), '\n')
+
+cat('Densidad del grafo: ', graph.density(g)*100, '%', '\n')
+cat('Reciprocidad del grafo: ', reciprocity(g, mode="default")*100, '%', '\n')
+```
+
+La comunidad no forma un grafo fuertemente conexo, por lo que no es posible visitar todos los perfiles a partir del conjunto de perfiles que sigue (follows) cada usuario. No están fuertemente conectados los miembros de la comunidad.
+
+Sin embargo, sí tienen una conexión débil: Es decir, si no se tuviera en cuenta el sentido de las aristas, se podrían visitar todos los perfiles a partir del conjunto de perfiles que sigue (follows) cada usuario. 
+
+Además no es prácticamente nada denso, y como se puede apreciar la reciprocidad tampoco es alta (a penas del 1.63%).
