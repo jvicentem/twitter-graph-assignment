@@ -22,3 +22,16 @@ library(dplyr)
 g <- read.table('./out.ego-twitter', sep=' ') %>%
                 graph_from_data_frame(directed=TRUE)
 ```
+
+2. Muestra	 el	 grafo	 por	 pantalla e	 indica	 qué	 tipo	 de	 grafo	 es.	 ¿Es	 de	 ayuda	 la	 visualización	del	grafo para	identificar	su	tipo?
+
+```{r 2}
+#plot(g, layout=layout.kamada.kawai)
+
+is.connected(g)
+is.directed(g)
+is.weighted(g)
+is.bipartite(g)
+```
+
+La información que nos muestra la salida sobre el grafo es la siguiente: se trata de un grafo que no es conexo, sí es dirigido, no es un grafo ponderado ni tampoco bipartido.
