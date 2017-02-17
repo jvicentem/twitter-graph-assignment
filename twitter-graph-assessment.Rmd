@@ -14,6 +14,7 @@ library(igraph)
 library(magrittr)
 library(knitr)
 library(dplyr)
+library(ggplot2)
 ```
 
 1. Carga el grafo en memoria. Las funciones read_table y graph.data.frame facilitan la tarea de cargar grafos en un formato aceptado por igraph. Busca en la documentación de igraph y R su descripción y uso.
@@ -35,3 +36,26 @@ is.bipartite(g)
 ```
 
 La información que nos muestra la salida sobre el grafo es la siguiente: se trata de un grafo que no es conexo, sí es dirigido, no es un grafo ponderado ni tampoco bipartido.
+
+
+3. ¿Qué	 representa,	 en	 este	 grafo,	 el	 grado	 de	 un	 vértice?	 Analiza y	 comenta	 la	distribución	del	grado	de	este	grafo.
+
+```{r 3}
+g.degree <- degree(g)
+
+hist(g.degree, labels=TRUE)
+
+ggplot_hist <- as.data.frame(g.degree) %>%
+                ggplot(aes(x=g.degree))
+
+ggplot_hist +
+  geom_histogram(binwidth=10, colour="black", fill="white") +
+  xlim(20, 200)
+
+hist(log(g.degree))
+```
+
+El grado de un vértice representa el número de seguidores (followers) que tiene un usuario.
+
+Como se puede apreciar, hay muchos usuarios con 20 o menos seguidores en comparación con el resto. En el segundo gráfico se elimina ese primer grupo para poder ver mejor la frecuencia del número de seguidores. En el último gráfico se aplica una transformación logarítmica para observar mejor el aspecto de la frecuencia de los followers
+
