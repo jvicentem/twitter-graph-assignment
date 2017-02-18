@@ -97,3 +97,15 @@ El usuario con más seguidores es el 36, con 57 followers.
 
 El usuario que más perfiles sigue es el 11824, con 238 follows.
 
+
+6. Indica	quiénes	son	los	seguidores	del	usuario	1305.
+
+```{r 6}
+in_neighbors <- neighbors(g, '1305', mode='in')
+
+in_neighbors
+
+plot(induced_subgraph(g, c(as_ids(in_neighbors), '1305')))
+```
+
+Los seguidores del usuario 1305 son los usuarios 1301, 7331, 13200 y 16843.
