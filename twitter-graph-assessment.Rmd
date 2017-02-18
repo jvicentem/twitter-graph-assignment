@@ -87,9 +87,8 @@ Además no es prácticamente nada denso, y como se puede apreciar la reciprocida
 ```{r 5}
 cat('Usuario con más seguidores: \n')
 sort(g.degree.in, decreasing=TRUE)[1]
-cat('\n')
+
 cat('Usuario que más perfiles sigue: \n')
-cat('\n')
 sort(g.degree.out, decreasing=TRUE)[1]
 ```
 
@@ -101,11 +100,38 @@ El usuario que más perfiles sigue es el 11824, con 238 follows.
 6. Indica	quiénes	son	los	seguidores	del	usuario	1305.
 
 ```{r 6}
-in_neighbors <- neighbors(g, '1305', mode='in')
+in_node <- '1305'
+
+in_neighbors <- neighbors(g, in_node, mode='in')
 
 in_neighbors
 
-plot(induced_subgraph(g, c(as_ids(in_neighbors), '1305')))
+in_neighbors %>%
+  as_ids(.) %>%
+  c(., in_node) %>%
+  induced_subgraph(g, .) %>%
+  plot(.)
 ```
 
 Los seguidores del usuario 1305 son los usuarios 1301, 7331, 13200 y 16843.
+
+
+7. Indica	a	quién	sigue	el	usuario	1373.
+
+```{r 7}
+out_node <- '1373'
+
+out_neighbors <- neighbors(g, out_node, mode='out')
+
+cat('Lista de perfiles que sigue el usuario 1373: \n')
+out_neighbors
+
+
+out_neighbors %>%
+  as_ids(.) %>%
+  c(., out_node) %>%
+  induced_subgraph(g, .) %>%
+  plot(., edge.arrow.size=0.5, edge.arrow.width=0.5)
+```
+
+Los seguidores del usuario 1373 son los que se indican en la lista anterior.
