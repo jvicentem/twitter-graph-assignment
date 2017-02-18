@@ -14,7 +14,6 @@ library(igraph)
 library(magrittr)
 library(knitr)
 library(dplyr)
-library(ggplot2)
 ```
 
 1. Carga el grafo en memoria. Las funciones read_table y graph.data.frame facilitan la tarea de cargar grafos en un formato aceptado por igraph. Busca en la documentación de igraph y R su descripción y uso.
@@ -40,24 +39,26 @@ La información que nos muestra la salida sobre el grafo es la siguiente: se tra
 
 3. ¿Qué	 representa,	 en	 este	 grafo,	 el	 grado	 de	 un	 vértice?	 Analiza y	 comenta	 la	distribución	del	grado	de	este	grafo.
 
-```{r 3}
-g.degree <- degree(g)
 
-hist(g.degree, labels=TRUE)
+El grado de un vértice representa el número de seguidores (followers) y perfiles que sigue (follows) de un usuario.
 
-ggplot_hist <- as.data.frame(g.degree) %>%
-                ggplot(aes(x=g.degree))
+Al tratarse de un grafo dirigido, es interesante ver el grado de entrada (seguidores) y de salida (seguidos) de cada nodo (usuario).
 
-ggplot_hist +
-  geom_histogram(binwidth=10, colour="black", fill="white") +
-  xlim(20, 200)
+```{r 3-in}
+g.degree.in <- degree(g, mode='in')
 
-hist(log(g.degree))
+hist(g.degree.in, labels=TRUE)
 ```
 
-El grado de un vértice representa el número de seguidores (followers) que tiene un usuario.
+En este caso estamos viendo la frecuencia de seguidores. Se puede apreciar que hay muchos usuarios con 5 o menos seguidores en comparación con el resto.
 
-Como se puede apreciar, hay muchos usuarios con 20 o menos seguidores en comparación con el resto. En el segundo gráfico se elimina ese primer grupo para poder ver mejor la frecuencia del número de seguidores. En el último gráfico se aplica una transformación logarítmica para observar mejor el aspecto de la frecuencia de los followers.
+```{r 3-out}
+g.degree.out <- degree(g, mode='out')
+
+hist(g.degree.out, labels=TRUE)
+```
+
+En este caso estamos viendo la frecuencia de perfiles seguidos. Se puede apreciar que hay muchos usuarios que siguen a 20 o menos perfiles en comparación con el resto.
 
 
 4. Si	seleccionamos	la	comunidad	 formada	por	los	usuarios	190,	191,	192,	193,	194	y	13167,	 ¿podemos	 considerar	 que	 los	 usuarios	 que	 la	 forman	 están	 fuertemente	conectados?	¿qué	tipo	de	conexión	tienen?
@@ -79,3 +80,20 @@ La comunidad no forma un grafo fuertemente conexo, por lo que no es posible visi
 Sin embargo, sí tienen una conexión débil: Es decir, si no se tuviera en cuenta el sentido de las aristas, se podrían visitar todos los perfiles a partir del conjunto de perfiles que sigue (follows) cada usuario. 
 
 Además no es prácticamente nada denso, y como se puede apreciar la reciprocidad tampoco es alta (a penas del 1.63%).
+
+
+5. ¿Qué	 usuario	 tiene	 más	 seguidores?	 ¿Qué	 usuario	 sigue	 a	 un	 mayor	 número	 de	usuarios?
+
+```{r 5}
+cat('Usuario con más seguidores: \n')
+sort(g.degree.in, decreasing=TRUE)[1]
+cat('\n')
+cat('Usuario que más perfiles sigue: \n')
+cat('\n')
+sort(g.degree.out, decreasing=TRUE)[1]
+```
+
+El usuario con más seguidores es el 36, con 57 followers.
+
+El usuario que más perfiles sigue es el 11824, con 238 follows.
+
