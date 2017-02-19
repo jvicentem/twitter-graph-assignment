@@ -135,3 +135,25 @@ out_neighbors %>%
 ```
 
 Los seguidores del usuario 1373 son los que se indican en la lista anterior.
+
+
+8. ¿Cuál	es	el	ratio	seguidores/siguiendo	del	usuario	13815? ¿se	puede	considerar	que	es	un	usuario	influyente?
+
+```{r 8}
+ex_8_node <- '13815'
+
+followers <- length(neighbors(g, ex_8_node, mode='in'))
+follows <- length(neighbors(g, ex_8_node, mode='out'))
+
+cat('Followers: ', followers, '\n')
+cat('Follows: ', follows, '\n')
+followers/follows
+
+#sort(authority_score(g, scale = TRUE)$vector, decreasing = TRUE)[ex_8_node]
+authority_score(g, scale = TRUE)$vector[ex_8_node]
+```
+
+El ratio es de 1 seguidor por 9 perfiles seguidos. No parece que sea un usuario influyente porque sigue a mucha más gente de la que a él le sigue. 
+
+Además, el authority score del usuario es muy bajo incluso comparándolo con el score de otros perfiles (ejecutar línea comentada).
+
