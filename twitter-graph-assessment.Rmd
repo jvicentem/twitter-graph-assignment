@@ -26,7 +26,7 @@ g <- read.table('./out.ego-twitter', sep=' ') %>%
 2. Muestra	 el	 grafo	 por	 pantalla e	 indica	 qué	 tipo	 de	 grafo	 es.	 ¿Es	 de	 ayuda	 la	 visualización	del	grafo para	identificar	su	tipo?
 
 ```{r 2}
-#plot(g, layout=layout.kamada.kawai)
+plot(g, layout=layout.kamada.kawai, edge.arrow.size=0.5, edge.arrow.width=0.5, vertex.size=0.5, vertex.label.cex=0.5, vertex.label=NA) 
 
 cat('¿Es el grafo conexo?: ',is.connected(g), '\n')
 cat('¿Es el grafo dirigido?: ', is.directed(g), '\n')
@@ -35,6 +35,8 @@ cat('¿Es el grafo bipartido?: ', is.bipartite(g), '\n')
 ```
 
 La información que nos muestra la salida sobre el grafo es la siguiente: se trata de un grafo que no es conexo, sí es dirigido, no es un grafo ponderado ni tampoco bipartido.
+
+Mostrar el grafo por pantalla no ha servido de mucho ya que el número de vértices es tal que no permite observar con claridad las características del grafo. 
 
 
 3. ¿Qué	 representa,	 en	 este	 grafo,	 el	 grado	 de	 un	 vértice?	 Analiza y	 comenta	 la	distribución	del	grado	de	este	grafo.
