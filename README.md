@@ -1,2 +1,2 @@
-# twitter-graph-assessment
-First graph theory assessment
+# twitter-graph-assignment
+First graph theory assignment
