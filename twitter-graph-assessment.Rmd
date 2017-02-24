@@ -157,3 +157,10 @@ El ratio es de 1 seguidor por 9 perfiles seguidos. No parece que sea un usuario 
 
 Además, el authority score del usuario es muy bajo incluso comparándolo con el score de otros perfiles (ejecutar línea comentada).
 
+
+9. ¿Podemos	 decir	 que	 el	 grafo	 representa	 una	 gran	 comunidad? ¿O	 existen	comunidades	 aisladas?	 Indica	 la	 comunidad	 o	 comunidades	 que	 encuentras	 en	 el	grafo.
+
+```{r 9}
+#edge.betweenness.community(g)
+```
+
