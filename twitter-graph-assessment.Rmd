@@ -179,5 +179,22 @@ Si los conjuntos de vértices y aristas formasen una única componente conexa, h
 
 En la tabla anterior se puede apreciar el tamaño de cada clúster con su identificador, ordenados por tamaño. Llama la atención que hay un grupo mucho más grande que los demás: 22.322 usuarios frente al siguiente más grande de 74 usuarios. Sería interesante ver si se trata de una componente gigante, ya que en ese caso deberíamos centrar nuestro estudio en el clúster 1 (aquel que tiene 22.322 usuarios). 
 
+10. Si	tenemos	en	cuenta	la	comunidad de	35	usuarios del	grafo,	¿cuál	es	el	usuario	menos	importante?	¿Por	qué?
 
+La comunidad con 35 usuarios es la comunidad con id 5.
 
+```{r 10}
+community_5 <- induced.subgraph(g, which(clusters_obj$membership == which(clusters_obj$csize == 35)))
+
+plot(community_5)
+
+cat('Importancia en cuanto a popularidad')
+degree(community_5, mode='out')
+
+cat('Importancia en cuanto a la estructura de la comunidad')
+closeness(community_5)
+```
+
+Depende de lo que uno entienda por importancia: Si entendemos por importancia popularidad, el usuario menos importantes es el 1445, ya que mientras el resto tienen un seguidor (el usuario 1445), él no tiene ninguno. Sin embargo, el usuario 1445 es el más importante en el sentido de que gracias a él la comunidad existe.
+
+Por el gráfico podríamos decir que es una comunidad muy cerrada: hay un único usuario que consume los tweets del resto de usuarios y además este usuario no tiene ningún seguidor.
