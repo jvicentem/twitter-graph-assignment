@@ -198,3 +198,20 @@ closeness(community_5)
 Depende de lo que uno entienda por importancia: Si entendemos por importancia popularidad, el usuario menos importantes es el 1445, ya que mientras el resto tienen un seguidor (el usuario 1445), él no tiene ninguno. Sin embargo, el usuario 1445 es el más importante en el sentido de que gracias a él la comunidad existe.
 
 Por el gráfico podríamos decir que es una comunidad muy cerrada: hay un único usuario que consume los tweets del resto de usuarios y además este usuario no tiene ningún seguidor.
+
+
+11. Si	ahora	analizamos	la	comunidad	más	grande	del	grafo
+a. ¿Cuál	es	el	vértice	más	cercano	al	resto?
+b. ¿Qué	vértice	es	el	que	controla	un	mayor	flujo	de	información?
+
+```{r 11}
+biggest_community <- induced.subgraph(g, which(clusters_obj$membership == which.max(clusters_obj$csize)))
+
+head(sort(closeness(biggest_community), decreasing=TRUE), col.names=c('Usuario y closeness centrality'))
+
+head(sort(betweenness(biggest_community), decreasing=TRUE), col.names=c('Usuario y betweeness centrality'))
+```
+
+Para calcular el vértice maś cercano al resto, usamos la medida closeness centrality. En este caso, el usuario más cercano al resto es el 7045.
+
+Para calcular el vértice que controla el mayor flujo de información, usamos la medida betweenes centrality. En este caso, el usuario que controla el mayor flujo de información es el 1368.
