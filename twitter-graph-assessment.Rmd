@@ -163,6 +163,21 @@ Además, el authority score del usuario es muy bajo incluso comparándolo con el
 9. ¿Podemos	 decir	 que	 el	 grafo	 representa	 una	 gran	 comunidad? ¿O	 existen	comunidades	 aisladas?	 Indica	 la	 comunidad	 o	 comunidades	 que	 encuentras	 en	 el	grafo.
 
 ```{r 9}
-#edge.betweenness.community(g)
+count_components(g, mode = 'weak')
+
+clusters_obj <- clusters(g)
+
+kable(
+  data.frame(size=clusters_obj$csize, cluster_id=c(1:clusters_obj$no)) %>% 
+    arrange(desc(size))
+  )
 ```
+
+Podemos ver el número de comunidades que hay calculando el número de componentes conexas débiles (sin tener en cuenta las direcciones de las aristas) que existen.
+
+Si los conjuntos de vértices y aristas formasen una única componente conexa, hablaríamos de una sóla comunidad, pero en este caso no es así, ya que encontramos 72 comunidades (72 componentes conexas). 
+
+En la tabla anterior se puede apreciar el tamaño de cada clúster con su identificador, ordenados por tamaño. Llama la atención que hay un grupo mucho más grande que los demás: 22.322 usuarios frente al siguiente más grande de 74 usuarios. Sería interesante ver si se trata de una componente gigante, ya que en ese caso deberíamos centrar nuestro estudio en el clúster 1 (aquel que tiene 22.322 usuarios). 
+
+
 
