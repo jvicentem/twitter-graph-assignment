@@ -28,10 +28,10 @@ g <- read.table('./out.ego-twitter', sep=' ') %>%
 ```{r 2}
 plot(g, layout=layout.kamada.kawai, edge.arrow.size=0.5, edge.arrow.width=0.5, vertex.size=0.5, vertex.label.cex=0.5, vertex.label=NA) 
 
-cat('¿Es el grafo conexo?: ',is.connected(g), '\n')
-cat('¿Es el grafo dirigido?: ', is.directed(g), '\n')
-cat('¿Es el grafo ponderado?: ', is.weighted(g), '\n')
-cat('¿Es el grafo bipartido?: ', is.bipartite(g), '\n')
+cat('¿Es el grafo conexo?: ',is.connected(g))
+cat('¿Es el grafo dirigido?: ', is.directed(g))
+cat('¿Es el grafo ponderado?: ', is.weighted(g))
+cat('¿Es el grafo bipartido?: ', is.bipartite(g))
 ```
 
 La información que nos muestra la salida sobre el grafo es la siguiente: se trata de un grafo que no es conexo, sí es dirigido, no es un grafo ponderado ni tampoco bipartido.
@@ -70,11 +70,11 @@ community <- induced_subgraph(g, c('190', '191', '192', '193', '193', '194', '13
 
 plot(community)
 
-cat('¿Es el grafo fuertemente conexo?: ', is_connected(community, mode='strong'), '\n')
-cat('¿Es el grafo débilmente conexo?: ', is_connected(community, mode='weak'), '\n')
+cat('¿Es el grafo fuertemente conexo?: ', is_connected(community, mode='strong'))
+cat('¿Es el grafo débilmente conexo?: ', is_connected(community, mode='weak'))
 
-cat('Densidad del grafo: ', graph.density(g)*100, '%', '\n')
-cat('Reciprocidad del grafo: ', reciprocity(g, mode="default")*100, '%', '\n')
+cat('Densidad del grafo: ', graph.density(g)*100, '%')
+cat('Reciprocidad del grafo: ', reciprocity(g, mode="default")*100, '%')
 ```
 
 La comunidad no forma un grafo fuertemente conexo, por lo que no es posible visitar todos los perfiles a partir del conjunto de perfiles que sigue (follows) cada usuario. No están fuertemente conectados los miembros de la comunidad.
@@ -87,10 +87,10 @@ Además no es prácticamente nada denso, y como se puede apreciar la reciprocida
 5. ¿Qué	 usuario	 tiene	 más	 seguidores?	 ¿Qué	 usuario	 sigue	 a	 un	 mayor	 número	 de	usuarios?
 
 ```{r 5}
-cat('Usuario con más seguidores: \n')
+cat('Usuario con más seguidores:')
 sort(g.degree.in, decreasing=TRUE)[1]
 
-cat('Usuario que más perfiles sigue: \n')
+cat('Usuario que más perfiles sigue:')
 sort(g.degree.out, decreasing=TRUE)[1]
 ```
 
@@ -125,7 +125,7 @@ out_node <- '1373'
 
 out_neighbors <- neighbors(g, out_node, mode='out')
 
-cat('Lista de perfiles que sigue el usuario 1373: \n')
+cat('Lista de perfiles que sigue el usuario 1373:')
 out_neighbors
 
 
@@ -147,8 +147,8 @@ ex_8_node <- '13815'
 followers <- length(neighbors(g, ex_8_node, mode='in'))
 follows <- length(neighbors(g, ex_8_node, mode='out'))
 
-cat('Followers: ', followers, '\n')
-cat('Follows: ', follows, '\n')
+cat('Followers: ', followers)
+cat('Follows: ', follows)
 followers/follows
 
 #sort(authority_score(g, scale = TRUE)$vector, decreasing = TRUE)[ex_8_node]
