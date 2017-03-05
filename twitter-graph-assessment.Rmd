@@ -177,5 +177,7 @@ Podemos ver el número de comunidades que hay calculando el número de component
 
 Si los conjuntos de vértices y aristas formasen una única componente conexa, hablaríamos de una sóla comunidad, pero en este caso no es así, ya que encontramos 72 comunidades (72 componentes conexas). 
 
-En la tabla anterior se puede apreciar el tamaño de cada clúster con su identificador, ordenados por tamaño. Llama la atención que hay un grupo mucho más grande que los demás: 22.322 usuarios frente al siguiente más grande de 74 usuarios. Sería interesante ver si se trata de una componente gigante, ya que en ese caso deberíamos centrar nuestro estudio en el clúster 1 (aquel que tiene 22.322 usuarios).
+En la tabla anterior se puede apreciar el tamaño de cada clúster con su identificador, ordenados por tamaño. Llama la atención que hay un grupo mucho más grande que los demás: 22.322 usuarios frente al siguiente más grande de 74 usuarios. Sería interesante ver si se trata de una componente gigante, ya que en ese caso deberíamos centrar nuestro estudio en el clúster 1 (aquel que tiene 22.322 usuarios). 
+
+
 
