@@ -49,7 +49,7 @@ Al tratarse de un grafo dirigido, es interesante ver el grado de entrada (seguid
 ```{r 3-in}
 g.degree.in <- degree(g, mode='in')
 
-hist(g.degree.in, labels=TRUE)
+hist(g.degree.in, labels=TRUE, ylim=c(0, 24000))
 ```
 
 En este caso estamos viendo la frecuencia de seguidores. Se puede apreciar que hay muchos usuarios con 5 o menos seguidores en comparación con el resto.
@@ -57,7 +57,7 @@ En este caso estamos viendo la frecuencia de seguidores. Se puede apreciar que h
 ```{r 3-out}
 g.degree.out <- degree(g, mode='out')
 
-hist(g.degree.out, labels=TRUE)
+hist(g.degree.out, labels=TRUE, ylim=c(0, 24000))
 ```
 
 En este caso estamos viendo la frecuencia de perfiles seguidos. Se puede apreciar que hay muchos usuarios que siguen a 20 o menos perfiles en comparación con el resto.
