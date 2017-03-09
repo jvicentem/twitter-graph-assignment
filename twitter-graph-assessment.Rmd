@@ -1,0 +1,217 @@
+---
+title: "Análisis de Grafos y Redes Sociales"
+author: "José Vicente Mellado"
+date: "15 February 2017"
+output: html_document
+---
+
+## Introducción
+
+El	 grafo	 out.ego-twitter almacena	 información	 acerca	 de	 usuarios	 de	 Twitter.	 En	 concreto,	 se	 trata	 de	 un	grafo	 dirigido	 no	 ponderado	 donde	 cada	 vértice	 representa	a	 un	usuario,	mientras	que	una	arista	(v, u) indica	que	el	usuario	v sigue	al	usuario	u. El	objetivo	 de	 esta	 hoja	 de	 ejercicios	 es	 analizar	 la	 estructura	 de	 este	 grafo	 y	 extraer	 diferentes	características	estructurales	del	mismo.
+
+```{r import-libraries, message=FALSE, warning=FALSE}
+library(igraph)
+library(magrittr)
+library(knitr)
+library(dplyr)
+```
+
+1. Carga el grafo en memoria. Las funciones read_table y graph.data.frame facilitan la tarea de cargar grafos en un formato aceptado por igraph. Busca en la documentación de igraph y R su descripción y uso.
+
+```{r 1}
+g <- read.table('./out.ego-twitter', sep=' ') %>%
+                graph_from_data_frame(directed=TRUE)
+```
+
+2. Muestra	 el	 grafo	 por	 pantalla e	 indica	 qué	 tipo	 de	 grafo	 es.	 ¿Es	 de	 ayuda	 la	 visualización	del	grafo para	identificar	su	tipo?
+
+```{r 2}
+plot(g, layout=layout.kamada.kawai, edge.arrow.size=0.5, edge.arrow.width=0.5, vertex.size=0.5, vertex.label.cex=0.5, vertex.label=NA) 
+
+cat('¿Es el grafo conexo?: ',is.connected(g))
+cat('¿Es el grafo dirigido?: ', is.directed(g))
+cat('¿Es el grafo ponderado?: ', is.weighted(g))
+cat('¿Es el grafo bipartido?: ', is.bipartite(g))
+```
+
+La información que nos muestra la salida sobre el grafo es la siguiente: se trata de un grafo que no es conexo, sí es dirigido, no es un grafo ponderado ni tampoco bipartido.
+
+Mostrar el grafo por pantalla no ha servido de mucho ya que el número de vértices es tal que no permite observar con claridad las características del grafo. 
+
+
+3. ¿Qué	 representa,	 en	 este	 grafo,	 el	 grado	 de	 un	 vértice?	 Analiza y	 comenta	 la	distribución	del	grado	de	este	grafo.
+
+
+El grado de un vértice representa el número de seguidores (followers) y perfiles que sigue (follows) de un usuario.
+
+Al tratarse de un grafo dirigido, es interesante ver el grado de entrada (seguidores) y de salida (seguidos) de cada nodo (usuario).
+
+```{r 3-in}
+g.degree.in <- degree(g, mode='in')
+
+hist(g.degree.in, labels=TRUE, ylim=c(0, 24000))
+```
+
+En este caso estamos viendo la frecuencia de seguidores. Se puede apreciar que hay muchos usuarios con 5 o menos seguidores en comparación con el resto.
+
+```{r 3-out}
+g.degree.out <- degree(g, mode='out')
+
+hist(g.degree.out, labels=TRUE, ylim=c(0, 24000))
+```
+
+En este caso estamos viendo la frecuencia de perfiles seguidos. Se puede apreciar que hay muchos usuarios que siguen a 20 o menos perfiles en comparación con el resto.
+
+
+4. Si	seleccionamos	la	comunidad	 formada	por	los	usuarios	190,	191,	192,	193,	194	y	13167,	 ¿podemos	 considerar	 que	 los	 usuarios	 que	 la	 forman	 están	 fuertemente	conectados?	¿qué	tipo	de	conexión	tienen?
+
+```{r 4}
+community <- induced_subgraph(g, c('190', '191', '192', '193', '193', '194', '13167'))
+
+plot(community)
+
+cat('¿Es el grafo fuertemente conexo?: ', is_connected(community, mode='strong'))
+cat('¿Es el grafo débilmente conexo?: ', is_connected(community, mode='weak'))
+
+cat('Densidad del grafo: ', graph.density(g)*100, '%')
+cat('Reciprocidad del grafo: ', reciprocity(g, mode="default")*100, '%')
+```
+
+La comunidad no forma un grafo fuertemente conexo, por lo que no es posible visitar todos los perfiles a partir del conjunto de perfiles que sigue (follows) cada usuario. No están fuertemente conectados los miembros de la comunidad.
+
+Sin embargo, sí tienen una conexión débil: Es decir, si no se tuviera en cuenta el sentido de las aristas, se podrían visitar todos los perfiles a partir del conjunto de perfiles que sigue (follows) cada usuario. 
+
+Además no es prácticamente nada denso, y como se puede apreciar la reciprocidad tampoco es alta (a penas del 1.63%).
+
+
+5. ¿Qué	 usuario	 tiene	 más	 seguidores?	 ¿Qué	 usuario	 sigue	 a	 un	 mayor	 número	 de	usuarios?
+
+```{r 5}
+cat('Usuario con más seguidores:')
+sort(g.degree.in, decreasing=TRUE)[1]
+
+cat('Usuario que más perfiles sigue:')
+sort(g.degree.out, decreasing=TRUE)[1]
+```
+
+El usuario con más seguidores es el 36, con 57 followers.
+
+El usuario que más perfiles sigue es el 11824, con 238 follows.
+
+
+6. Indica	quiénes	son	los	seguidores	del	usuario	1305.
+
+```{r 6}
+in_node <- '1305'
+
+in_neighbors <- neighbors(g, in_node, mode='in')
+
+in_neighbors
+
+in_neighbors %>%
+  as_ids(.) %>%
+  c(., in_node) %>%
+  induced_subgraph(g, .) %>%
+  plot(.)
+```
+
+Los seguidores del usuario 1305 son los usuarios 1301, 7331, 13200 y 16843.
+
+
+7. Indica	a	quién	sigue	el	usuario	1373.
+
+```{r 7}
+out_node <- '1373'
+
+out_neighbors <- neighbors(g, out_node, mode='out')
+
+cat('Lista de perfiles que sigue el usuario 1373:')
+out_neighbors
+
+
+out_neighbors %>%
+  as_ids(.) %>%
+  c(., out_node) %>%
+  induced_subgraph(g, .) %>%
+  plot(., edge.arrow.size=0.5, edge.arrow.width=0.5)
+```
+
+Los seguidores del usuario 1373 son los que se indican en la lista anterior.
+
+
+8. ¿Cuál	es	el	ratio	seguidores/siguiendo	del	usuario	13815? ¿se	puede	considerar	que	es	un	usuario	influyente?
+
+```{r 8}
+ex_8_node <- '13815'
+
+followers <- length(neighbors(g, ex_8_node, mode='in'))
+follows <- length(neighbors(g, ex_8_node, mode='out'))
+
+cat('Followers: ', followers)
+cat('Follows: ', follows)
+followers/follows
+
+#sort(authority_score(g, scale = TRUE)$vector, decreasing = TRUE)[ex_8_node]
+authority_score(g, scale = TRUE)$vector[ex_8_node]
+```
+
+El ratio es de 1 seguidor por 9 perfiles seguidos. No parece que sea un usuario influyente porque sigue a mucha más gente de la que a él le sigue. 
+
+Además, el authority score del usuario es muy bajo incluso comparándolo con el score de otros perfiles (ejecutar línea comentada).
+
+
+9. ¿Podemos	 decir	 que	 el	 grafo	 representa	 una	 gran	 comunidad? ¿O	 existen	comunidades	 aisladas?	 Indica	 la	 comunidad	 o	 comunidades	 que	 encuentras	 en	 el	grafo.
+
+```{r 9}
+count_components(g, mode = 'weak')
+
+clusters_obj <- clusters(g)
+
+kable(
+  data.frame(size=clusters_obj$csize, cluster_id=c(1:clusters_obj$no)) %>% 
+    arrange(desc(size))
+  )
+```
+
+Podemos ver el número de comunidades que hay calculando el número de componentes conexas débiles (sin tener en cuenta las direcciones de las aristas) que existen.
+
+Si los conjuntos de vértices y aristas formasen una única componente conexa, hablaríamos de una sóla comunidad, pero en este caso no es así, ya que encontramos 72 comunidades (72 componentes conexas). 
+
+En la tabla anterior se puede apreciar el tamaño de cada clúster con su identificador, ordenados por tamaño. Llama la atención que hay un grupo mucho más grande que los demás: 22.322 usuarios frente al siguiente más grande de 74 usuarios. Sería interesante ver si se trata de una componente gigante, ya que en ese caso deberíamos centrar nuestro estudio en el clúster 1 (aquel que tiene 22.322 usuarios). 
+
+10. Si	tenemos	en	cuenta	la	comunidad de	35	usuarios del	grafo,	¿cuál	es	el	usuario	menos	importante?	¿Por	qué?
+
+La comunidad con 35 usuarios es la comunidad con id 5.
+
+```{r 10}
+community_5 <- induced.subgraph(g, which(clusters_obj$membership == which(clusters_obj$csize == 35)))
+
+plot(community_5)
+
+cat('Importancia en cuanto a popularidad')
+degree(community_5, mode='out')
+
+cat('Importancia en cuanto a la estructura de la comunidad')
+closeness(community_5)
+```
+
+Depende de lo que uno entienda por importancia: Si entendemos por importancia popularidad, el usuario menos importantes es el 1445, ya que mientras el resto tienen un seguidor (el usuario 1445), él no tiene ninguno. Sin embargo, el usuario 1445 es el más importante en el sentido de que gracias a él la comunidad existe.
+
+Por el gráfico podríamos decir que es una comunidad muy cerrada: hay un único usuario que consume los tweets del resto de usuarios y además este usuario no tiene ningún seguidor.
+
+
+11. Si	ahora	analizamos	la	comunidad	más	grande	del	grafo
+a. ¿Cuál	es	el	vértice	más	cercano	al	resto?
+b. ¿Qué	vértice	es	el	que	controla	un	mayor	flujo	de	información?
+
+```{r 11}
+biggest_community <- induced.subgraph(g, which(clusters_obj$membership == which.max(clusters_obj$csize)))
+
+head(sort(closeness(biggest_community), decreasing=TRUE), col.names=c('Usuario y closeness centrality'))
+
+head(sort(betweenness(biggest_community), decreasing=TRUE), col.names=c('Usuario y betweeness centrality'))
+```
+
+Para calcular el vértice maś cercano al resto, usamos la medida closeness centrality. En este caso, el usuario más cercano al resto es el 7045.
+
+Para calcular el vértice que controla el mayor flujo de información, usamos la medida betweenes centrality. En este caso, el usuario que controla el mayor flujo de información es el 1368.
