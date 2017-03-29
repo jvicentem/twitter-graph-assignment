@@ -87,6 +87,8 @@ Además no es prácticamente nada denso, y como se puede apreciar la reciprocida
 5. ¿Qué	 usuario	 tiene	 más	 seguidores?	 ¿Qué	 usuario	 sigue	 a	 un	 mayor	 número	 de	usuarios?
 
 ```{r 5}
+#Aclaración: se podría usar la función max pero utilizo sort a propósito para ver también el identificador
+
 cat('Usuario con más seguidores:')
 sort(g.degree.in, decreasing=TRUE)[1]
 
@@ -189,7 +191,7 @@ community_5 <- induced.subgraph(g, which(clusters_obj$membership == which(cluste
 plot(community_5)
 
 cat('Importancia en cuanto a popularidad')
-degree(community_5, mode='out')
+degree(community_5, mode='in')
 
 cat('Importancia en cuanto a la estructura de la comunidad')
 closeness(community_5)
